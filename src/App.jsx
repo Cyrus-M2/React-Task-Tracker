@@ -1,35 +1,52 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList"
+// import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, setTasks] = useState(() => {
+    const saved = localStorage.getItem("tasks");
+    return saved ? JSON.parse(saved) : [];
+  });
+  // Save tasks to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  const addTask = (title, description) => {
+    const newTask = {
+      id: Date.new(),
+      title,
+      description,
+      completed: false,
+    };
+    setTasks([...tasks, newTask]);
+  };
+
+  const toggleComplete = (id) => {
+    setTasks(
+      tasks.map((task) => 
+      task.id === id ? { ...task, completed: !task.completed} : task
+      )
+    );
+  };
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold text-center mb-4">📝 Task Tracker</h1>
+      <TaskForm onAdd={addTask} />
+      <TaskList tasks={tasks} onToggle={toggleComplete} onDelete={deleteTask} />
+
+      <p className="text-center mt-4 font-semibold">
+        Total Tasks: {tasks.length} | Completed:{" "}
+        {tasks.filter((t) => t.completed).length}
       </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
