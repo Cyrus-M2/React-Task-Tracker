@@ -15,7 +15,7 @@ function App() {
 
   const addTask = (title, description) => {
     const newTask = {
-      id: Date.new(),
+      id: Date.now(),
       title,
       description,
       completed: false,
