@@ -44,15 +44,6 @@ function TaskItem({ task, onToggle, onDelete, onEdit }) {
                         </>
                     )}
                 </div>
-                {/* <div>
-                    <h3 className={`font-semibold ${
-                        task.completed ? "line-through text-gray-500" : ""
-                    }`}
-                    >
-                        {task.title}
-                    </h3>
-                    <p className="text-sm text-gray-600">{task.description}</p>
-                </div> */}
                 <div className="flex gap-2">
                     {isEditing ? (
                         <>
